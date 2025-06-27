@@ -5,10 +5,6 @@ import { Shield, Euro, CreditCard, Banknote, Users, Building, TrendingUp, Award 
 const Footer = () => {
   const footerSections = [
     {
-      title: 'Services',
-      links: ['Wealth Management', 'Asset Management', 'Corporate Banking', 'Trading Services', 'Private Banking']
-    },
-    {
       title: 'Company',
       links: ['About Us', 'Leadership', 'Careers', 'Investor Relations', 'Sustainability']
     },
@@ -52,7 +48,6 @@ const Footer = () => {
         <div className="py-16 border-b border-slate-800">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Key Figures</h2>
-            <p className="text-slate-400">Key Group Consolidated Figures (31.12.2024)</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

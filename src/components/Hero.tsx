@@ -9,7 +9,7 @@ const Hero = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('/lovable-uploads/201aab69-40dc-483b-9ec8-7e24d87cec68.png')`
+          backgroundImage: `url('/lovable-uploads/hero-img-1-1536x819.jpeg')`
         }}
       />
       
@@ -36,24 +36,9 @@ const Hero = () => {
               </button>
               <button className="border border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-slate-900 transition-all duration-200">
                 Learn More
-              </button>
+              </button> 
             </div>
-
-            {/* Trust Indicators */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-8 pt-8">
-              <div className="flex items-center space-x-2">
-                <Shield className="h-5 w-5 text-yellow-400" />
-                <span className="text-sm text-white">Swiss Regulated</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Banknote className="h-5 w-5 text-yellow-400" />
-                <span className="text-sm text-white">CHF 50B+ Assets</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <TrendingUp className="h-5 w-5 text-yellow-400" />
-                <span className="text-sm text-white">Global Presence</span>
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>
