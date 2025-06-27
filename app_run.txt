@@ -1,1 +1,3 @@
 # npm run dev
+# npx update-browserslist-db@latest
+#bun run dev

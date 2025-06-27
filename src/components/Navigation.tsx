@@ -14,12 +14,13 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+          {/* Logo Section - Fixed positioning */}
           <div className="flex items-center space-x-2">
-            <Shield className="h-8 w-8 text-slate-700" />
-            <span className="text-xl font-bold text-slate-800">SwissBank International</span>
+            <img src="lovable_uploads/logo.png" alt="Bank of Swiss Logo" className="h-8 w-8" />
+            <span className="text-xl font-bold text-yellow-400">Bank of Swiss</span>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
@@ -27,20 +28,20 @@ const Navigation = () => {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-slate-600 hover:text-slate-900 transition-colors duration-200 font-medium"
+                className="text-white/80 hover:text-yellow-400 transition-colors duration-200 font-medium"
               >
                 {item.name}
               </a>
             ))}
-            <button className="bg-slate-800 text-white px-6 py-2 rounded-lg hover:bg-slate-700 transition-colors duration-200">
-              Client Login
+            <button className="bg-transparent border-2 border-white text-white px-6 py-2 rounded-full hover:bg-white/10 hover:border-yellow-400 hover:text-yellow-400 transition-all duration-300 font-semibold backdrop-blur-sm">
+              Login
             </button>
           </div>
 
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-slate-600 hover:text-slate-900"
+              className="text-white/80 hover:text-white"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -48,20 +49,20 @@ const Navigation = () => {
         </div>
 
         {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-slate-200">
+          <div className="md:hidden bg-slate-900/90 backdrop-blur-md border-t border-slate-700/50">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="block px-3 py-2 text-slate-600 hover:text-slate-900 transition-colors duration-200"
+                  className="block px-3 py-2 text-white/80 hover:text-white hover:text-yellow-400 transition-colors duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </a>
               ))}
-              <button className="w-full text-left px-3 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors duration-200 mt-2">
-                Client Login
+              <button className="w-full text-left px-3 py-2 bg-yellow-500/90 text-slate-900 rounded-lg hover:bg-yellow-400 transition-colors duration-200 mt-2 font-semibold">
+                Login
               </button>
             </div>
           </div>
