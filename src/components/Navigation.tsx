@@ -19,8 +19,8 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo Section - Fixed positioning */}
           <div className="flex items-center space-x-2">
-            <img src="lovable_uploads/logo.png" alt="Bank of Swiss Logo" className="h-8 w-8" />
-            <span className="text-xl font-bold text-yellow-400">Bank of Swiss</span>
+            <img src="lovable-uploads/bank_logo.png" alt="Bank of Swiss Logo" className="h-8 w-8" />
+            <span className="text-3xl text-yellow-400 font-serif">Bank of Swiss</span>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
@@ -28,12 +28,12 @@ const Navigation = () => {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-white/80 hover:text-yellow-400 transition-colors duration-200 font-medium"
+                className="text-white/80 hover:text-yellow-400 font-serif transition-colors duration-200 font-medium"
               >
                 {item.name}
               </a>
             ))}
-            <button className="bg-transparent border-2 border-white text-white px-6 py-2 rounded-full hover:bg-white/10 hover:border-yellow-400 hover:text-yellow-400 transition-all duration-300 font-semibold backdrop-blur-sm">
+            <button className="bg-transparent border-2 border-white text-white px-6 py-2 rounded-full hover:bg-white/10 hover:border-yellow-400 hover:text-yellow-400 transition-all duration-300 font-serif backdrop-blur-sm">
               Login
             </button>
           </div>
@@ -61,7 +61,7 @@ const Navigation = () => {
                   {item.name}
                 </a>
               ))}
-              <button className="w-full text-left px-3 py-2 bg-yellow-500/90 text-slate-900 rounded-lg hover:bg-yellow-400 transition-colors duration-200 mt-2 font-semibold">
+              <button className="w-full text-left px-3 py-2 bg-yellow-500/90 text-slate-900 rounded-lg hover:bg-yellow-400 transition-colors duration-200 mt-2 font-serif">
                 Login
               </button>
             </div>
