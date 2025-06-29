@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Shield, TrendingUp, Wallet } from 'lucide-react';
+import { Shield, TrendingUp, Wallet, Users, Building, Award } from 'lucide-react';
 
 const About = () => {
   const stats = [
@@ -9,17 +9,40 @@ const About = () => {
     { label: 'Global Offices', value: '25+', icon: TrendingUp }
   ];
 
+  const keyFigures = [
+    {
+      value: '2,558',
+      label: 'Employees at the heart of our Group',
+      icon: Users
+    },
+    {
+      value: '30',
+      label: 'Offices worldwide to be close to our clients',
+      icon: Building
+    },
+    {
+      value: '224.2',
+      label: 'Asset under management (CHF bn), growing steadily year on year',
+      icon: TrendingUp
+    },
+    {
+      value: '43%',
+      label: 'CET1 ratio',
+      icon: Award
+    }
+  ];
+
   return (
-    <section id="about" className="py-20 bg-gradient-to-br from-slate-50 to-white">
+    <section id="about" className="py-20 bg-gradient-to-br from-black via-gray-900 to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
           {/* Content */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-serif">
                 Swiss Banking Heritage, Global Innovation
               </h2>
-              <div className="space-y-4 text-slate-600 leading-relaxed">
+              <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>
                   Founded in 1873 in the heart of Switzerland, SwissBank International has evolved 
                   from a traditional private bank to a global financial powerhouse while maintaining 
@@ -41,49 +64,56 @@ const About = () => {
             <div className="grid grid-cols-3 gap-6">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="bg-gradient-to-br from-slate-800 to-slate-700 p-3 rounded-xl w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                  <div className="bg-gradient-to-br from-gray-800 to-gray-700 p-3 rounded-xl w-12 h-12 flex items-center justify-center mx-auto mb-3">
                     <stat.icon className="w-6 h-6 text-yellow-400" />
                   </div>
-                  <div className="text-2xl font-bold text-slate-900 mb-1">{stat.value}</div>
-                  <div className="text-sm text-slate-600">{stat.label}</div>
+                  <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+                  <div className="text-sm text-gray-400">{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Image/Visual */}
+          {/* Visual Effect */}
           <div className="relative">
-            <div className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl p-8 text-white">
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-transparent rounded-2xl blur-3xl"></div>
+            <div className="relative bg-gradient-to-br from-gray-900 to-black rounded-2xl p-8 border border-gray-700 backdrop-blur-sm">
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-yellow-400">Our Commitment</h3>
-                
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <div>
-                      <h4 className="font-semibold mb-1">Swiss Regulatory Excellence</h4>
-                      <p className="text-slate-300 text-sm">Operating under the strict Swiss banking regulations, ensuring the highest standards of financial security and client protection.</p>
+                <h3 className="text-2xl font-bold text-yellow-400 font-serif">Our Commitment</h3>
+                <div className="h-40 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <Shield className="w-10 h-10 text-black" />
                     </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <div>
-                      <h4 className="font-semibold mb-1">Innovative Technology</h4>
-                      <p className="text-slate-300 text-sm">Cutting-edge digital platforms combined with traditional banking expertise to deliver seamless client experiences.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <div>
-                      <h4 className="font-semibold mb-1">Personalized Service</h4>
-                      <p className="text-slate-300 text-sm">Dedicated relationship managers providing tailored financial solutions for each client's unique needs and objectives.</p>
-                    </div>
+                    <p className="text-gray-300">Excellence in Every Detail</p>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Key Figures Section */}
+        <div className="py-16 border-t border-gray-800">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 font-serif">
+              Key Figures
+            </h3>
+            <p className="text-gray-300 text-lg">
+              Numbers that reflect our commitment to excellence and growth
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {keyFigures.map((figure, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-gradient-to-br from-gray-800 to-gray-700 p-4 rounded-xl w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <figure.icon className="w-8 h-8 text-yellow-400" />
+                </div>
+                <div className="text-3xl font-bold text-white mb-2 font-serif">{figure.value}</div>
+                <div className="text-gray-400 text-sm leading-relaxed">{figure.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

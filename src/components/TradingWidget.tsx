@@ -36,21 +36,21 @@ const TradingWidget = () => {
   }, []);
 
   return (
-    <section id="trading" className="py-20 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+    <section id="trading" className="py-20 bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-serif">
             Real-Time Market Data
           </h2>
-          <p className="text-slate-300 text-lg">
+          <p className="text-gray-300 text-lg">
             Access live market data and execute trades with institutional-grade platforms
           </p>
         </div>
 
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
+        <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-semibold">Global Markets</h3>
-            <div className="flex items-center space-x-2 text-sm text-slate-400">
+            <h3 className="text-xl font-semibold font-serif">Global Markets</h3>
+            <div className="flex items-center space-x-2 text-sm text-gray-400">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <span>Live</span>
             </div>
@@ -60,10 +60,10 @@ const TradingWidget = () => {
             {marketData.map((item, index) => (
               <div
                 key={index}
-                className="bg-slate-700/50 p-4 rounded-lg border border-slate-600 hover:border-slate-500 transition-colors duration-200"
+                className="bg-gray-800/50 p-4 rounded-lg border border-gray-600 hover:border-gray-500 transition-colors duration-200"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-slate-200">{item.symbol}</span>
+                  <span className="font-semibold text-gray-200">{item.symbol}</span>
                   <div className="flex items-center">
                     {item.change >= 0 ? (
                       <TrendingUp className="w-4 h-4 text-green-400 mr-1" />
@@ -87,7 +87,7 @@ const TradingWidget = () => {
           </div>
 
           <div className="mt-8 text-center">
-            <button className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-400 hover:to-yellow-500 transition-all duration-200 transform hover:scale-105">
+            <button className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black px-8 py-3 rounded-lg font-semibold hover:from-yellow-400 hover:to-yellow-500 transition-all duration-200 transform hover:scale-105">
               Access Trading Platform
             </button>
           </div>
