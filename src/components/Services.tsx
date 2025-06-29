@@ -1,84 +1,138 @@
-
-import React from 'react';
-import { Shield, TrendingUp, Banknote, CreditCard } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { Button } from "@/components/ui/button";
+import { TrendingUp, Landmark, Crown, Lock, DollarSign } from "lucide-react";
 
 const Services = () => {
+  const servicesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const serviceBlocks = document.querySelectorAll('.service-block');
+    serviceBlocks.forEach((block) => observer.observe(block));
+
+    return () => observer.disconnect();
+  }, []);
+
   const services = [
     {
-      icon: Shield,
-      title: 'Wealth Management',
-      description: 'Comprehensive portfolio management and financial planning services tailored to high-net-worth individuals and families.',
-      features: ['Portfolio Optimization', 'Tax Planning', 'Estate Planning', 'Risk Management']
-    },
-    {
+      title: "Wealth Management",
+      description: "Comprehensive portfolio management and investment strategies tailored to your financial goals. Our expert advisors provide personalized guidance to maximize your wealth potential.",
+      offerings: ["Portfolio Management", "Investment Advisory", "Risk Assessment", "Market Analysis"],
       icon: TrendingUp,
-      title: 'Asset Management',
-      description: 'Institutional-grade investment solutions with access to global markets and alternative investments.',
-      features: ['Institutional Funds', 'Alternative Investments', 'ESG Solutions', 'Multi-Asset Strategies']
+      image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop"
     },
     {
-      icon: Banknote,
-      title: 'Corporate Banking',
-      description: 'Comprehensive banking solutions for corporations, including treasury services and trade finance.',
-      features: ['Trade Finance', 'Treasury Services', 'Corporate Lending', 'Cash Management']
+      title: "Corporate Banking",
+      description: "Advanced banking solutions for businesses of all sizes. From cash management to international trade finance, we support your business growth.",
+      offerings: ["Trade Finance", "Cash Management", "Corporate Loans", "Treasury Services"],
+      icon: Landmark,
+      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=400&fit=crop"
     },
     {
-      icon: CreditCard,
-      title: 'Trading Services',
-      description: 'Advanced trading platforms with direct market access and institutional-grade execution.',
-      features: ['Multi-Asset Trading', 'Prime Brokerage', 'Market Research', 'Execution Services']
+      title: "Private Banking",
+      description: "Exclusive banking services for high-net-worth individuals. Experience personalized attention with dedicated relationship managers and bespoke financial solutions.",
+      offerings: ["Personal Wealth Advisory", "Estate Planning", "Tax Optimization", "Exclusive Investment Opportunities"],
+      icon: Crown,
+      image: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&h=400&fit=crop"
+    },
+    {
+      title: "Asset Management",
+      description: "Institutional-grade investment solutions with access to global markets and alternative investments.",
+      offerings: ["Institutional Funds", "Alternative Investments", "ESG Solutions", "Multi-Asset Strategies"],
+      icon: TrendingUp,
+      image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&h=400&fit=crop"
+    },
+    {
+      title: "Trading Services",
+      description: "Advanced trading platforms with direct market access and institutional-grade execution.",
+      offerings: ["Multi-Asset Trading", "Prime Brokerage", "Market Research", "Execution Services"],
+      icon: DollarSign,
+      image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=600&h=400&fit=crop"
+    },
+    {
+      title: "Digital Security",
+      description: "State-of-the-art security measures protecting your assets and data. Our advanced encryption and multi-factor authentication ensure complete peace of mind.",
+      offerings: ["Advanced Encryption", "Biometric Authentication", "24/7 Monitoring", "Fraud Protection"],
+      icon: Lock,
+      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&h=400&fit=crop"
     }
   ];
 
   return (
-    <section id="services" className="py-20 bg-white">
+    <section id="services" className="py-20 bg-black" ref={servicesRef}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            Premium Financial Services
+          <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-4">
+            Our Services
           </h2>
-          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-            Discover our comprehensive suite of financial services designed to meet 
-            the sophisticated needs of discerning clients worldwide.
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Comprehensive financial solutions tailored to meet your unique needs and aspirations.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="space-y-20">
           {services.map((service, index) => (
             <div
-              key={index}
-              className="group bg-gradient-to-br from-slate-50 to-white p-8 rounded-2xl border border-slate-200 hover:border-slate-300 transition-all duration-300 hover:shadow-xl"
+              key={service.title}
+              className={`service-block opacity-0 transition-all duration-1000 ${
+                index % 2 === 0 ? 'slide-in-left' : 'slide-in-right'
+              }`}
             >
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0">
-                  <div className="bg-gradient-to-br from-slate-800 to-slate-700 p-3 rounded-xl group-hover:from-yellow-500 group-hover:to-yellow-600 transition-all duration-300">
-                    <service.icon className="h-6 w-6 text-white" />
+              <div className={`flex flex-col lg:flex-row items-center gap-12 ${
+                index % 2 !== 0 ? 'lg:flex-row-reverse' : ''
+              }`}>
+                {/* Image */}
+                <div className="lg:w-1/2">
+                  <div className="relative overflow-hidden rounded-2xl shadow-2xl group">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                 </div>
-                
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">
-                    {service.title}
-                  </h3>
-                  <p className="text-slate-600 mb-4 leading-relaxed">
+
+                {/* Content */}
+                <div className="lg:w-1/2 space-y-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="p-3 bg-yellow-400/10 rounded-full">
+                      <service.icon className="h-8 w-8 text-yellow-400" />
+                    </div>
+                    <h3 className="font-serif text-3xl font-bold text-white">
+                      {service.title}
+                    </h3>
+                  </div>
+                  
+                  <p className="text-lg text-gray-300 leading-relaxed">
                     {service.description}
                   </p>
-                  
-                  <ul className="space-y-2">
-                    {service.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center text-sm text-slate-500">
-                        <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-3"></div>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <button className="mt-6 text-slate-800 font-semibold hover:text-yellow-600 transition-colors duration-200 flex items-center group">
+
+                  <div className="space-y-3">
+                    <h4 className="font-serif text-xl font-semibold text-white">Key Offerings:</h4>
+                    <ul className="space-y-2">
+                      {service.offerings.map((offering, idx) => (
+                        <li key={idx} className="flex items-center text-gray-300">
+                          <div className="w-2 h-2 bg-yellow-400 rounded-full mr-3"></div>
+                          {offering}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <Button className="bg-yellow-400 text-black hover:bg-yellow-500 font-medium">
                     Learn More
-                    <svg className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -90,3 +144,7 @@ const Services = () => {
 };
 
 export default Services;
+
+
+
+
