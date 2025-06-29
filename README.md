@@ -1,18 +1,4 @@
-# Welcome to your Lovable project
-
-## Project info
-
-**URL**: https://lovable.dev/projects/545a354b-60f8-47a2-bd00-0eebd272c849
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/545a354b-60f8-47a2-bd00-0eebd272c849) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
+# Welcome to Swiss Bank website with BOT project
 
 **Use your preferred IDE**
 
@@ -34,6 +20,8 @@ npm i
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
+or 
+bun run dev
 ```
 
 **Edit a file directly in GitHub**
@@ -59,15 +47,3 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/545a354b-60f8-47a2-bd00-0eebd272c849) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
