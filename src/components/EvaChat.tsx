@@ -129,24 +129,26 @@ const EvaChat = () => {
   };
 
   if (!isOpen) {
-    return (
-      <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="h-16 w-16 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-black shadow-2xl hover:shadow-3xl transition-all duration-300 flex flex-col items-center justify-center"
-        >
-          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-1">
-            <img 
-              src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" 
-              alt="Eva - AI Assistant" 
-              className="w-8 h-8 rounded-full object-cover"
-            />
-          </div>
-          <span className="text-xs font-semibold">Eva</span>
-        </Button>
-      </div>
-    );
-  }
+  return (
+    <div className="fixed bottom-6 right-6 z-50">
+      {/* Yellow glow effect behind the circle */}
+      <div className="absolute inset-0 rounded-full bg-yellow-400/30 blur-lg animate-pulse"></div>
+      <div className="absolute inset-0 rounded-full bg-yellow-400/20 blur-xl"></div>
+      
+      {/* Main button */}
+      <Button
+        onClick={() => setIsOpen(true)}
+        className="relative h-16 w-16 rounded-full bg-white hover:bg-gray-50 border-2 border-yellow-400 hover:border-yellow-300 shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center p-1"
+      >
+        <img 
+          src="/lovable-uploads/chat-bot-3d-icon_235528-2179.jpeg" 
+          alt="Eva - AI Assistant" 
+          className="w-14 h-14 rounded-full object-cover"
+        />
+      </Button>
+    </div>
+  );
+}
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -154,13 +156,13 @@ const EvaChat = () => {
         <CardHeader className="flex flex-row items-center justify-between p-4 bg-black text-white border-b border-gray-700">
           <div className="flex items-center space-x-3">
             <img 
-              src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" 
+              src="/lovable-uploads/chat-bot-3d-icon_235528-2179.jpeg"
               alt="Eva - AI Assistant" 
-              className="w-10 h-10 rounded-full object-cover border-2 border-yellow-400"
+              className="w-8 h-8 rounded-full object-cover"
             />
             <div>
               <span className="font-semibold font-serif">Eva - AI Assistant</span>
-              <div className="text-xs text-gray-400">Swiss Bank • Online</div>
+              <div className="font-semibold font-serif text-xs text-yellow-400">Swiss Bank</div>
             </div>
           </div>
           <Button

@@ -18,15 +18,15 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gray-900 border-t border-gray-800">
+    <footer className="bg-black-900 border-t border-black-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1">
             <div className="flex items-center mb-4">
-              <Shield className="h-8 w-8 text-yellow-400 mr-3" />
-              <span className="font-serif text-2xl font-bold text-white">Bank of Swiss</span>
+              <img src="lovable-uploads/bank_logo.png" alt="Bank of Swiss Logo" className="h-8 w-8" />
+              <span className="text-3xl text-yellow-400 font-serif"> Bank of Swiss</span>
             </div>
-            <p className="text-gray-400 text-sm">
+            <p className="text-black-400 text-sm">
               Swiss Excellence in Global Banking since 1873
             </p>
           </div>

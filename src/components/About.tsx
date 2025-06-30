@@ -75,22 +75,22 @@ const About = () => {
           </div>
 
           {/* Visual Effect */}
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-transparent rounded-2xl blur-3xl"></div>
-            <div className="relative bg-gradient-to-br from-gray-900 to-black rounded-2xl p-8 border border-gray-700 backdrop-blur-sm">
-              <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-yellow-400 font-serif">Our Commitment</h3>
-                <div className="h-40 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                      <Shield className="w-10 h-10 text-black" />
-                    </div>
-                    <p className="text-gray-300">Excellence in Every Detail</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="relative group">
+          {/* Glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-transparent rounded-2xl blur-3xl group-hover:from-yellow-400/30 transition-all duration-500"></div>
+  
+          {/* Image container */}
+          <div className="relative overflow-hidden rounded-2xl border border-gray-700">
+          <img 
+            src="/lovable-uploads/currency-exchange-revolution.jpeg" 
+            alt="Our Commitment" 
+            className="w-full h-[280px] object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-110"
+          />
+    
+          {/* Subtle overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500"></div>
           </div>
+        </div>
         </div>
 
         {/* Key Figures Section */}
@@ -110,7 +110,7 @@ const About = () => {
                 <div className="bg-gradient-to-br from-gray-800 to-gray-700 p-4 rounded-xl w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <figure.icon className="w-8 h-8 text-yellow-400" />
                 </div>
-                <div className="text-3xl font-bold text-white mb-2 font-serif">{figure.value}</div>
+                <div className="text-2xl font-bold text-white mb-1">{figure.value}</div>
                 <div className="text-gray-400 text-sm leading-relaxed">{figure.label}</div>
               </div>
             ))}
