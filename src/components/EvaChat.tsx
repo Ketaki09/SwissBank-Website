@@ -20,7 +20,7 @@ const EvaChat = () => {
     {
       id: '1',
       type: 'bot',
-      content: 'Hello! I\'m Eva, your Swiss Bank AI assistant. I can help you with banking inquiries, account information, investment advice, and much more. How may I assist you today?',
+      content: 'Hello! I\'m Eva, your Swiss Bank AI assistant. I can help with inquiries, account info, and escalate complaints for quick resolution. How may I assist you today?',
       timestamp: new Date(),
       messageType: 'text'
     }
