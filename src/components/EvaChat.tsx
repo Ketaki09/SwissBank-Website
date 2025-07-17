@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { X, Send, Mic, MicOff, Image, FileText, Plus, AlertCircle, CheckCircle, Volume2, VolumeX } from "lucide-react";
+import { X, Send, Mic, MicOff, Image, FileText, Plus, AlertCircle, CheckCircle, Volume2, VolumeX, Clock, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { getAuthService } from "../services/authService";
 import { VoiceService } from "../services/VoiceService";
 import { config } from "../lib/config";
 import type { AuthResponse } from "../services/authService";
+import { useOTPStatus } from '../hooks/useOTPStatus';
 
 interface Message {
   id: string;
@@ -43,11 +44,22 @@ const AuthenticatedEvaChat = () => {
   const [authLoading, setAuthLoading] = useState(false);
   const [inputHeight, setInputHeight] = useState(40);
   
+  // OTP Status using the hook
+  const { 
+    otpStatus, 
+    isLoading: otpStatusLoading, 
+    error: otpStatusError,
+    refreshStatus: refreshOTPStatus,
+    formatTimeRemaining,
+    getColorForStatus,
+    getUrgencyLevel 
+  } = useOTPStatus(sessionId);
+  
   // Voice-related state
   const [isListening, setIsListening] = useState(false);
   const [mutedMessages, setMutedMessages] = useState<Set<string>>(new Set());
   
-  // Voice service - no API key needed!
+  // Voice service
   const [voiceService] = useState(() => new VoiceService());
 
   // Update voice service with customer data when available
@@ -216,7 +228,7 @@ const AuthenticatedEvaChat = () => {
           const formData = new FormData();
           formData.append('session_id', sessionId!);
           
-          const otpResponse = await fetch(`${config.backendUrl}/api/auth/initiate-otp`, {
+          const otpResponse = await fetch(`${config.backendUrl}/api/auth/initiate-otp-enhanced`, {
             method: 'POST',
             body: formData
           });
@@ -224,7 +236,7 @@ const AuthenticatedEvaChat = () => {
           if (otpResponse.ok) {
             const otpData = await otpResponse.json();
             if (otpData.success) {
-              toast.success(`✅ OTP sent successfully! Check your ${otpData.otp_method || 'email'}.`);
+              toast.success(`✅ OTP sent successfully! Check your ${otpData.otp_method || 'email'}.`); 
             } else {
               toast.error(`Failed to send OTP: ${otpData.message}`);
               addSystemMessage('❌ Failed to send OTP. You can try the Resend button.');
@@ -254,11 +266,17 @@ const AuthenticatedEvaChat = () => {
       return;
     }
 
+    // Check if OTP is expired using the hook data
+    if (otpStatus && !otpStatus.otp_active) {
+      toast.error('OTP has expired. Please click Resend to get a new code.');
+      return;
+    }
+
     setAuthLoading(true);
     try {
       const response = await authService.verifyOTP(otp);
       if (response.success) {
-        // Authentication successful - no toast to avoid system message
+        // Authentication successful - OTP status will be cleared automatically
       } else {
         toast.error(authService.getUserFriendlyError(response));
       }
@@ -267,6 +285,61 @@ const AuthenticatedEvaChat = () => {
     } finally {
       setAuthLoading(false);
     }
+  };
+
+  const handleResendOTP = async () => {
+    setAuthLoading(true);
+    try {
+      const response = await authService.resendOTP();
+      if (response.success) {
+        toast.success('New verification code sent!');
+        // The OTP status will be automatically updated by the hook
+        await refreshOTPStatus(); // Manually refresh for immediate update
+      } else {
+        toast.error(authService.getUserFriendlyError(response));
+      }
+    } catch (error: unknown) {
+      toast.error(authService.getUserFriendlyError(error as AuthResponse));
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+  
+  const getOTPStatusStyling = (urgency: string) => {
+    const styles = {
+      normal: {
+        borderColor: 'border-green-500/50',
+        bgColor: 'bg-green-900/20',
+        textColor: 'text-green-400',
+        progressColor: 'bg-green-400'
+      },
+      warning: {
+        borderColor: 'border-yellow-500/50',
+        bgColor: 'bg-yellow-900/20',
+        textColor: 'text-yellow-400',
+        progressColor: 'bg-yellow-400'
+      },
+      urgent: {
+        borderColor: 'border-orange-500/50',
+        bgColor: 'bg-orange-900/20',
+        textColor: 'text-orange-400',
+        progressColor: 'bg-orange-400'
+      },
+      critical: {
+        borderColor: 'border-red-500/50',
+        bgColor: 'bg-red-900/20',
+        textColor: 'text-red-400',
+        progressColor: 'bg-red-400'
+      },
+      expired: {
+        borderColor: 'border-red-500/50',
+        bgColor: 'bg-red-900/20',
+        textColor: 'text-red-400',
+        progressColor: 'bg-red-400'
+      }
+    };
+    
+    return styles[urgency] || styles.normal;
   };
 
   const generateEvaResponse = useCallback((userInput: string, inputType: string): string => {
@@ -579,6 +652,80 @@ const AuthenticatedEvaChat = () => {
                         </p>
                       )}
                     </div>
+
+                    {/* Enhanced OTP Status and Countdown */}
+                    {otpStatus && otpStatus.otp_initiated && (
+                      <div className={`border rounded-lg p-3 space-y-2 transition-all duration-300 ${
+                        getOTPStatusStyling(getUrgencyLevel(otpStatus.remaining_seconds)).borderColor
+                      } ${getOTPStatusStyling(getUrgencyLevel(otpStatus.remaining_seconds)).bgColor}`}>
+                        
+                        {/* Header row */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Clock className={`w-4 h-4 ${
+                              otpStatus.otp_active ? 'text-blue-400' : 'text-gray-400'
+                            }`} />
+                            <span className="text-xs text-gray-300">
+                              Code sent to {otpStatus.masked_contact}
+                            </span>
+                          </div>
+                          <Badge variant="outline" className="bg-gray-700 border-gray-500">
+                            {otpStatus.method.toUpperCase()}
+                          </Badge>
+                        </div>
+
+                        {/* Countdown row */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-400">
+                            {otpStatus.otp_active ? 'Time remaining:' : 'Status:'}
+                          </span>
+                          <div className="flex items-center space-x-2">
+                            {otpStatus.otp_active ? (
+                              <>
+                                <span className={`text-sm font-mono font-semibold ${
+                                  getOTPStatusStyling(getUrgencyLevel(otpStatus.remaining_seconds)).textColor
+                                }`}>
+                                  {formatTimeRemaining(otpStatus.remaining_seconds)}
+                                </span>
+                                {otpStatus.remaining_seconds <= 60 && (
+                                  <span className="text-xs text-red-400 animate-pulse">
+                                    ⚠️
+                                  </span>
+                                )}
+                              </>
+                            ) : (
+                              <span className="text-sm font-semibold text-red-400">
+                                Expired
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {/* Progress bar */}
+                        <div className="w-full bg-gray-700 rounded-full h-1.5">
+                          <div 
+                            className={`h-1.5 rounded-full transition-all duration-1000 ${
+                              getOTPStatusStyling(getUrgencyLevel(otpStatus.remaining_seconds)).progressColor
+                            }`}
+                            style={{ 
+                              width: `${otpStatus.progress_percentage}%` 
+                            }}
+                          />
+                        </div>
+                        
+                        {/* Attempts info */}
+                        {otpStatus.attempts_used > 0 && (
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-gray-400">Attempts:</span>
+                            <span className={`${
+                              otpStatus.remaining_attempts <= 1 ? 'text-red-400' : 'text-gray-300'
+                            }`}>
+                              {otpStatus.remaining_attempts} remaining
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                     
                     <div className="space-y-2">
                       <Input
@@ -588,26 +735,65 @@ const AuthenticatedEvaChat = () => {
                         onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         className="bg-gray-800 border-gray-600 text-white text-center text-lg tracking-widest"
                         maxLength={6}
-                        disabled={authLoading}
+                        disabled={authLoading || (otpStatus && !otpStatus.otp_active)}
                       />
                       
                       <div className="flex gap-2">
                         <Button 
                           onClick={handleOTPVerification}
-                          disabled={authLoading || otp.length !== 6}
+                          disabled={authLoading || otp.length !== 6 || (otpStatus && !otpStatus.otp_active)}
                           className="flex-1 bg-yellow-400 text-black hover:bg-yellow-500"
                         >
                           {authLoading ? 'Verifying...' : 'Verify'}
                         </Button>
                         <Button 
                           variant="outline"
-                          onClick={() => authService.resendOTP()}
+                          onClick={handleResendOTP}
                           disabled={authLoading}
-                          className="border-gray-600 text-white hover:bg-gray-800"
+                          className="border-gray-600 text-white hover:bg-gray-800 flex items-center space-x-1"
                         >
-                          Resend
+                          <RefreshCw className={`w-3 h-3 ${authLoading ? 'animate-spin' : ''}`} />
+                          <span>Resend</span>
                         </Button>
                       </div>
+                      
+                      {/* Dynamic status messages */}
+                      {otpStatus && (
+                        <>
+                          {!otpStatus.otp_active && otpStatus.otp_initiated && (
+                            <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-2">
+                              <p className="text-xs text-red-400 text-center">
+                                ⏰ Verification code expired. Click 'Resend' to get a new code.
+                              </p>
+                            </div>
+                          )}
+                          
+                          {otpStatus.otp_active && otpStatus.remaining_seconds <= 60 && (
+                            <div className="bg-yellow-900/20 border border-yellow-500/50 rounded-lg p-2">
+                              <p className="text-xs text-yellow-400 text-center">
+                                ⚠️ Code expires soon. Have your code ready!
+                              </p>
+                            </div>
+                          )}
+                          
+                          {otpStatus.otp_active && otpStatus.remaining_seconds <= 30 && (
+                            <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-2 animate-pulse">
+                              <p className="text-xs text-red-400 text-center">
+                                🚨 Code expires very soon! Enter it now!
+                              </p>
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {/* Error state */}
+                      {otpStatusError && (
+                        <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-2">
+                          <p className="text-xs text-red-400 text-center">
+                            ❌ {otpStatusError}
+                          </p>
+                        </div>
+                      )} 
                     </div>
                   </div>
                 )}
