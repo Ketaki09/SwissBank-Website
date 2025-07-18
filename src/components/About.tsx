@@ -82,7 +82,7 @@ const About = () => {
           {/* Image container */}
           <div className="relative overflow-hidden rounded-2xl border border-gray-700">
           <img 
-            src="/lovable-uploads/currency-exchange-revolution.jpeg" 
+            src="/Images_upload/currency-exchange-revolution.jpeg" 
             alt="Our Commitment" 
             className="w-full h-[280px] object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-110"
           />

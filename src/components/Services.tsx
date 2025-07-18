@@ -29,7 +29,7 @@ const Services = () => {
       description: "Comprehensive portfolio management and investment strategies tailored to your financial goals. Our expert advisors provide personalized guidance to maximize your wealth potential.",
       offerings: ["Portfolio Management", "Investment Advisory", "Risk Assessment", "Market Analysis"],
       icon: TrendingUp,
-      image: "/lovable-uploads/map-lying-wooden-table.jpg"
+      image: "/Images_upload/map-lying-wooden-table.jpg"
     },
     {
       title: "Corporate Banking",
@@ -43,28 +43,28 @@ const Services = () => {
       description: "Exclusive banking services for high-net-worth individuals. Experience personalized attention with dedicated relationship managers and bespoke financial solutions.",
       offerings: ["Personal Wealth Advisory", "Estate Planning", "Tax Optimization", "Exclusive Investment Opportunities"],
       icon: Crown,
-      image: "/lovable-uploads/Private_banking.jpeg"
+      image: "/Images_upload/Private_banking.jpeg"
     },
     {
       title: "Asset Management",
       description: "Institutional-grade investment solutions with access to global markets and alternative investments.",
       offerings: ["Institutional Funds", "Alternative Investments", "ESG Solutions", "Multi-Asset Strategies"],
       icon: TrendingUp,
-      image: "/lovable-uploads/Asset_managment.jpeg"
+      image: "/Images_upload/Asset_managment.jpeg"
     },
     {
       title: "Trading Services",
       description: "Advanced trading platforms with direct market access and institutional-grade execution.",
       offerings: ["Multi-Asset Trading", "Prime Brokerage", "Market Research", "Execution Services"],
       icon: DollarSign,
-      image: "/lovable-uploads/Trading_services.jpg"
+      image: "/Images_upload/Trading_services.jpg"
     },
     {
       title: "Digital Security",
       description: "State-of-the-art security measures protecting your assets and data. Our advanced encryption and multi-factor authentication ensure complete peace of mind.",
       offerings: ["Advanced Encryption", "Biometric Authentication", "24/7 Monitoring", "Fraud Protection"],
       icon: Lock,
-      image: "/lovable-uploads/Digital_security.jpg"
+      image: "/Images_upload/Digital_security.jpg"
     }
   ];
 
