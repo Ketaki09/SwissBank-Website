@@ -57,7 +57,8 @@ const AuthenticatedEvaChat = () => {
   
   // Voice-related state
   const [isListening, setIsListening] = useState(false);
-  const [mutedMessages, setMutedMessages] = useState<Set<string>>(new Set());
+  const [isVoiceGloballyMuted, setIsVoiceGloballyMuted] = useState(false); // Global voice mute state
+  const [showRepeatInfo, setShowRepeatInfo] = useState(false); // Info popup for repeat functionality
   
   // Voice service
   const [voiceService] = useState(() => new VoiceService());
@@ -179,12 +180,65 @@ const AuthenticatedEvaChat = () => {
     }
   }, [authService, validateSession]);
 
+  // Add greeting message when user becomes authenticated (for existing sessions)
+  useEffect(() => {
+    if (isAuthenticated && customerData && messages.length === 0) {
+      // Only add greeting if no messages exist (to avoid duplicate greetings)
+      const greetingMessage: Message = {
+        id: `greeting_${Date.now()}`,
+        type: 'bot',
+        content: `Hello ${customerData.name || 'valued customer'}! I'm Eva, your banking assistant. How can I help you today?`,
+        timestamp: new Date(),
+        messageType: 'text'
+      };
+      setMessages([greetingMessage]);
+      
+      // Play greeting voice message if not globally muted
+      if (!isVoiceGloballyMuted) {
+        setTimeout(() => {
+          voiceService.textToSpeech(greetingMessage.content);
+        }, 500); // Small delay to ensure message is rendered
+      }
+      
+      // Show repeat info popup for first-time users
+      setTimeout(() => {
+        setShowRepeatInfo(true);
+        // Auto-hide after 5 seconds
+        setTimeout(() => setShowRepeatInfo(false), 5000);
+      }, 1000);
+      
+      // Show repeat info popup for first-time users
+      setTimeout(() => {
+        setShowRepeatInfo(true);
+        // Auto-hide after 5 seconds
+        setTimeout(() => setShowRepeatInfo(false), 5000);
+      }, 1000);
+    }
+  }, [isAuthenticated, customerData, messages.length, isVoiceGloballyMuted, voiceService]);
+
   // Updated event listeners to not show any messages after auth
   useEffect(() => {
     const handleAuthSuccess = (data: AuthResponse) => {
       setIsAuthenticated(true);
       setAuthStep('authenticated');
       setCustomerData(data.customer_data);
+      
+      // Add automatic greeting message when authentication is successful
+      const greetingMessage: Message = {
+        id: `greeting_${Date.now()}`,
+        type: 'bot',
+        content: `Hello ${data.customer_data?.name || 'valued customer'}! I'm Eva, your banking assistant. How can I help you today?`,
+        timestamp: new Date(),
+        messageType: 'text'
+      };
+      setMessages(prev => [...prev, greetingMessage]);
+      
+      // Play greeting voice message if not globally muted
+      if (!isVoiceGloballyMuted) {
+        setTimeout(() => {
+          voiceService.textToSpeech(greetingMessage.content);
+        }, 500); // Small delay to ensure message is rendered
+      }
     };
 
     const handleContactVerified = (data: AuthResponse) => {
@@ -404,11 +458,12 @@ const AuthenticatedEvaChat = () => {
         };
         
         setMessages(prev => [...prev, botMessage]);
+      
+      // Automatically play voice for fallback bot message
+      playVoiceForBotMessage(botMessage.content, botMessage.id);
         
-        // Speak the response (unless muted)
-        if (!mutedMessages.has(botMessage.id)) {
-          await voiceService.textToSpeech(voiceResponse);
-        }
+        // Automatically play voice for bot message
+        playVoiceForBotMessage(voiceResponse, botMessage.id);
         
       } else {
         // Call backend chat API for text messages
@@ -434,6 +489,9 @@ const AuthenticatedEvaChat = () => {
             messageType: 'text'
           };
           setMessages(prev => [...prev, botMessage]);
+          
+          // Automatically play voice for bot message
+          playVoiceForBotMessage(data.response || 'I received your message and am processing it.', botMessage.id);
         } else {
           throw new Error('Chat API request failed');
         }
@@ -492,18 +550,46 @@ const AuthenticatedEvaChat = () => {
     }
   };
 
-  // Handle muting/unmuting specific messages
-  const toggleMessageMute = (messageId: string) => {
-    const newMutedMessages = new Set(mutedMessages);
-    if (newMutedMessages.has(messageId)) {
-      newMutedMessages.delete(messageId);
-    } else {
-      newMutedMessages.add(messageId);
-      // Stop any current speech
+  // Handle muting/unmuting specific messages and global voice control
+  const toggleGlobalVoiceMute = () => {
+    const newMuteState = !isVoiceGloballyMuted;
+    setIsVoiceGloballyMuted(newMuteState);
+    
+    if (newMuteState) {
+      // If muting globally, stop any current speech
       speechSynthesis.cancel();
+      toast.info('Voice messages muted');
+    } else {
+      toast.info('Voice messages enabled');
     }
-    setMutedMessages(newMutedMessages);
   };
+
+  // Function to automatically play voice for bot messages
+  const playVoiceForBotMessage = useCallback(async (content: string, messageId: string) => {
+    // Only play if not globally muted
+    if (!isVoiceGloballyMuted) {
+      try {
+        await voiceService.textToSpeech(content);
+      } catch (error) {
+        console.error('Error playing voice message:', error);
+      }
+    }
+  }, [isVoiceGloballyMuted, voiceService]);
+
+  // Function to repeat voice message
+  const repeatVoiceMessage = useCallback(async (content: string) => {
+    if (!isVoiceGloballyMuted) {
+      try {
+        // Stop any current speech before starting new one
+        speechSynthesis.cancel();
+        await voiceService.textToSpeech(content);
+      } catch (error) {
+        console.error('Error repeating voice message:', error);
+      }
+    } else {
+      toast.info('Voice is currently muted. Enable voice to hear messages.');
+    }
+  }, [isVoiceGloballyMuted, voiceService]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!isAuthenticated) {
@@ -570,14 +656,31 @@ const AuthenticatedEvaChat = () => {
               <div className="font-semibold font-serif text-xs text-yellow-400">Bank of Swiss</div>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsOpen(false)}
-            className="!h-6 !w-6 !p-0 hover:bg-gray-800 text-gray-400 hover:text-white"
-          >
-            <X className="h-3 w-3" />
-          </Button>
+          <div className="flex items-center space-x-1">
+            {/* Global Voice Mute Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleGlobalVoiceMute}
+              className="!h-6 !w-6 !p-0 hover:bg-gray-800 text-yellow-400 hover:text-yellow-300"
+              title={isVoiceGloballyMuted ? 'Enable voice messages' : 'Mute voice messages'}
+            >
+              {isVoiceGloballyMuted ? (
+                <VolumeX className="h-3 w-3" />
+              ) : (
+                <Volume2 className="h-3 w-3" />
+              )}
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              className="!h-6 !w-6 !p-0 hover:bg-gray-800 text-gray-400 hover:text-white"
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
         </CardHeader>
 
         <CardContent className="!p-0 flex flex-col h-[calc(100%-50px)]">
@@ -815,7 +918,7 @@ const AuthenticatedEvaChat = () => {
                           : 'bg-yellow-500 text-black border-2 border-yellow-400 animate-pulse-border'
                       }`}
                     >
-                      <div className="text-sm">
+                      <div className="text-sm pr-4 pb-4">
                         {message.messageType === 'voice' && message.type === 'user' && (
                           <span className="inline-flex items-center mr-2 text-xs text-yellow-400">
                             <Mic className="w-3 h-3 mr-1" />
@@ -824,19 +927,39 @@ const AuthenticatedEvaChat = () => {
                         {message.content}
                       </div>
                       
-                      {/* Mute button for bot messages */}
+                      {/* Repeat button for bot messages */}
                       {message.type === 'bot' && (
-                        <button
-                          onClick={() => toggleMessageMute(message.id)}
-                          className="absolute bottom-1 right-1 p-1 rounded-full hover:bg-black/10 transition-colors"
-                          title={mutedMessages.has(message.id) ? 'Unmute' : 'Mute'}
-                        >
-                          {mutedMessages.has(message.id) ? (
-                            <VolumeX className="w-3 h-3 text-black opacity-70" />
-                          ) : (
-                            <Volume2 className="w-3 h-3 text-black opacity-70" />
+                        <>
+                          <button
+                            onClick={() => repeatVoiceMessage(message.content)}
+                            className="absolute bottom-1 right-1 p-1 rounded-full hover:bg-black/10 transition-colors"
+                            title="Repeat message"
+                          >
+                            <RefreshCw className="w-3 h-3 text-black opacity-70 hover:opacity-100" />
+                          </button>
+                          
+                          {/* Show tip popup beside the first bot message */}
+                          {message.id.startsWith('greeting_') && showRepeatInfo && (
+                            <div className="absolute -right-2 top-0 ml-2 w-64 z-50">
+                              <div className="bg-yellow-400/95 backdrop-blur-sm border border-yellow-500 rounded-lg p-2 shadow-lg animate-in fade-in-0 slide-in-from-right-2 duration-300">
+                                <div className="flex items-start space-x-2">
+                                  <AlertCircle className="w-3 h-3 text-black mt-0.5 flex-shrink-0" />
+                                  <div className="text-black text-xs leading-relaxed">
+                                    <strong>💡 Tip:</strong> Use the repeat button (🔄) on any message to hear it again!
+                                  </div>
+                                  <button
+                                    onClick={() => setShowRepeatInfo(false)}
+                                    className="ml-auto p-0.5 rounded-full hover:bg-black/10 transition-colors"
+                                  >
+                                    <X className="w-2 h-2 text-black" />
+                                  </button>
+                                </div>
+                              </div>
+                              {/* Arrow pointing to the repeat button */}
+                              <div className="absolute left-0 top-3 -ml-1 w-2 h-2 bg-yellow-400 border-l border-b border-yellow-500 transform rotate-45"></div>
+                            </div>
                           )}
-                        </button>
+                        </>
                       )}
                     </div>
                   </div>
@@ -902,7 +1025,7 @@ const AuthenticatedEvaChat = () => {
                     e.stopPropagation();
                     setShowAttachments(!showAttachments);
                   }}
-                  className="!h-8 !w-8 !p-0 text-gray-400 hover:text-white hover:bg-gray-800 transition-transform duration-200"
+                  className="!h-8 !w-8 !p-0 text-yellow-400 hover:text-yellow-300 hover:bg-gray-800 transition-transform duration-200"
                 >
                   <div className={`transition-transform duration-200 ${showAttachments ? 'rotate-45' : 'rotate-0'}`}>
                     <Plus className="h-4 w-4" />
