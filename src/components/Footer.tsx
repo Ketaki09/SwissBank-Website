@@ -23,7 +23,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1">
             <div className="flex items-center mb-4">
-              <img src="lovable-uploads/bank_logo.png" alt="Bank of Swiss Logo" className="h-8 w-8" />
+              <img src="Images_upload/bank_logo.png" alt="Bank of Swiss Logo" className="h-8 w-8" />
               <span className="text-3xl text-yellow-400 font-serif"> Bank of Swiss</span>
             </div>
             <p className="text-black-400 text-sm">

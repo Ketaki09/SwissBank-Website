@@ -19,7 +19,7 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo Section - Fixed positioning */}
           <div className="flex items-center space-x-2">
-            <img src="lovable-uploads/bank_logo.png" alt="Bank of Swiss Logo" className="h-8 w-8" />
+            <img src="Images_upload/bank_logo.png" alt="Bank of Swiss Logo" className="h-8 w-8" />
             <span className="text-3xl text-yellow-400 font-serif">Bank of Swiss</span>
           </div>
 
